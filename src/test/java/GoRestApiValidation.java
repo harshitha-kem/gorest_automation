@@ -1,27 +1,34 @@
-import assertions.CreateUserAssertions;
-import assertions.DeleteUserAssertions;
-import assertions.GetUserAssertions;
-import assertions.UpdateUserAssertions;
+import assertions.*;
 import dtos.request.CreateUserDTO;
 import dtos.response.CreateUserResponseDTO;
-import dtos.response.GetUserResponseDTO;
+import dtos.response.GetDeletedUserResponseDTO;
 import io.restassured.response.Response;
+import net.serenitybdd.junit.runners.SerenityRunner;
+import net.thucydides.core.annotations.Steps;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import steps.GoRestSteps;
 
 import java.util.Objects;
 
+@RunWith(SerenityRunner.class)
 public class GoRestApiValidation
 {
+    @Steps
     GoRestSteps goRestSteps;
     String userId;
     CreateUserResponseDTO createUserResponseDTO;
-    GetUserResponseDTO getUserResponseDTO;
+    @Steps
     CreateUserAssertions createUserAssertions;
+    @Steps
     GetUserAssertions getUserAssertions;
+    @Steps
     UpdateUserAssertions updateUserAssertions;
+    @Steps
     DeleteUserAssertions deleteUserAssertions;
+    GetDeletedUserResponseDTO getDeletedUserResponseDTO;
+    GetDeletedUserAssertions getDeletedUserAssertions;
 
     @Test
     public void createUser()
@@ -38,31 +45,35 @@ public class GoRestApiValidation
         createUserDTO.setGender("Female");
         createUserDTO.setStatus("Active");
         //Create user controller
-        goRestSteps=new GoRestSteps();
         Response response=goRestSteps.createUser(createUserDTO);
         createUserResponseDTO=Objects.requireNonNull(response.jsonPath().getObject("",CreateUserResponseDTO.class));
         userId=createUserResponseDTO.getId();
         System.out.println(userId);
         //CreateUserAssertions
-        createUserAssertions=new CreateUserAssertions();
         createUserAssertions.checkThat(response).hasStatusCode(201);
         //GetUserAssertions
         response=goRestSteps.getUser(userId);
-        getUserAssertions=new GetUserAssertions();
         getUserAssertions.checkThat(response).checkId(userId).hasStatusCode(200);
         //UpdateUserAssertions
-        createUserDTO.setName("Anne Frank");
-        response=goRestSteps.updateUser(userId,createUserDTO);
-        updateUserAssertions=new UpdateUserAssertions();
+        CreateUserDTO updateUserDto = new CreateUserDTO();
+        updateUserDto.setName("Anne Frank");
+        response=goRestSteps.updateUser(userId, updateUserDto);
         updateUserAssertions.checkThat(response).checkName("Anne Frank").hasStatusCode(200);
         //deleteUserAssertions
         response=goRestSteps.deleteUser(userId);
-        deleteUserAssertions=new DeleteUserAssertions();
         deleteUserAssertions.checkThat(response).hasStatusCode(204);
         //RetrieveDeletedUser
         response=goRestSteps.getUser(userId);
-        getUserAssertions=new GetUserAssertions();
-        getUserAssertions.checkThat(response).hasStatusCode(404);
+        getDeletedUserResponseDTO=Objects.requireNonNull(response.jsonPath().getObject("",GetDeletedUserResponseDTO.class));
+        String message=getDeletedUserResponseDTO.getMessage();
+        getDeletedUserAssertions =new GetDeletedUserAssertions();
+        getDeletedUserAssertions.checkThat(response).hasStatusCode(404).hasMessage(message);
+    }
+
+    @Test
+    public void createPost()
+    {
+        
     }
 
 }

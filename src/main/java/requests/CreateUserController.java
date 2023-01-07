@@ -9,9 +9,10 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 public class CreateUserController {
-    private final String BASE_URI="https://gorest.co.in/";
-    private final String CREATE_USER_ENDPOINT="public/v2/users";
-    private final String GET_USER_ENDPOINT="public/v2/users/{userId}";
+    private final String BASE_URI="https://gorest.co.in/public/v2/users";
+    private final String GET_USER_ENDPOINT="/{userId}";
+    private final String UPDATE_USER_ENDPOINT="/{userId}";
+    private final String DELETE_USER_ENDPOINT="/{userId}";
     public Response createUser(CreateUserDTO createUserDTO)
     {
         RequestSpecification createUserHeaderRequest=new RequestSpecBuilder()
@@ -27,7 +28,7 @@ public class CreateUserController {
                 .when()
                 .log().all()
                 .relaxedHTTPSValidation()
-                .post(CREATE_USER_ENDPOINT);
+                .post(BASE_URI);
         return createUserResponse;
     }
     public Response getUser(String userId)
@@ -58,13 +59,13 @@ public class CreateUserController {
         RequestSpecification updateUserRequest=given()
                 .log().all()
                 .pathParam("userId",userId)
-                .body(createUserDTO)
-                .spec(updateUserHeaderRequest);
+                .spec(updateUserHeaderRequest)
+                .body(createUserDTO);
         Response updateUserResponse=updateUserRequest
                 .when()
                 .log().all()
                 .relaxedHTTPSValidation()
-                .put(GET_USER_ENDPOINT);
+                .put(UPDATE_USER_ENDPOINT);
         return  updateUserResponse;
     }
     public Response deleteUser(String userId)
@@ -81,7 +82,7 @@ public class CreateUserController {
         Response deleteUserResponse=deleteUserRequest
                 .log().all()
                 .relaxedHTTPSValidation()
-                .delete(GET_USER_ENDPOINT);
+                .delete(DELETE_USER_ENDPOINT);
         return deleteUserResponse;
     }
 }
