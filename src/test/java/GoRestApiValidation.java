@@ -1,4 +1,5 @@
 import assertions.*;
+import dtos.request.CreatePostDTO;
 import dtos.request.CreateUserDTO;
 import dtos.response.CreateUserResponseDTO;
 import dtos.response.GetDeletedUserResponseDTO;
@@ -29,6 +30,7 @@ public class GoRestApiValidation
     DeleteUserAssertions deleteUserAssertions;
     GetDeletedUserResponseDTO getDeletedUserResponseDTO;
     GetDeletedUserAssertions getDeletedUserAssertions;
+
 
     @Test
     public void createUser()
@@ -73,7 +75,12 @@ public class GoRestApiValidation
     @Test
     public void createPost()
     {
-        
+        //Create Post body
+        CreatePostDTO createPostDTO=new CreatePostDTO();
+        createPostDTO.setTitle("john wicks post");
+        createPostDTO.setBody("John wicks body");
+        //
+
     }
 
 }

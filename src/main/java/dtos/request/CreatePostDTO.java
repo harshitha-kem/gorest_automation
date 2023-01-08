@@ -1,11 +1,16 @@
+
 package dtos.request;
 
-public class CreatePostDTO {
-    private String body;
-    
-    private String title;
+import javax.annotation.Generated;
+import com.google.gson.annotations.Expose;
 
-    private String userId;
+
+public class CreatePostDTO {
+
+
+    private String body;
+
+    private String title;
 
     public String getBody() {
         return body;
@@ -21,14 +26,6 @@ public class CreatePostDTO {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
 }
